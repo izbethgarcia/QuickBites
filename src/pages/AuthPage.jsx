@@ -1,15 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { loginUser } from "../services/authService";
 import { useAuth } from "../context/AuthContext";
 
 function AuthPage() {
   const navigate = useNavigate();
-  const { continueAsGuest } = useAuth();
+  const { user, isGuest, continueAsGuest, loading } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (!loading && (user || isGuest)) {
+      navigate("/home");
+    }
+  }, [user, isGuest, loading, navigate]);
 
   async function handleLogin(event) {
     event.preventDefault();
